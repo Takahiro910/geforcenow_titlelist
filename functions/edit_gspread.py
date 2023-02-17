@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from googletrans import Translator
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 import os
 import streamlit as st
 
@@ -54,7 +55,7 @@ def edit_row(worksheet, values, row_num):
 
 def get_worksheet():
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    credentials = ServiceAccountCredentials.from_service_account_info(st.secrets["gcp_service_account"], scope)
+    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scope)
     # credentials = ServiceAccountCredentials.from_json_keyfile_name(JSON_FILE_PATH, scope)
     gs = gspread.authorize(credentials)
     spreadsheet_key = SHEET_KEY
