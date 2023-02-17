@@ -54,7 +54,8 @@ def edit_row(worksheet, values, row_num):
 
 def get_worksheet():
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(st.secrets["gcp_service_account"], scope)
+    credentials = ServiceAccountCredentials.from_service_account_info(st.secrets["gcp_service_account"], scope)
+    # credentials = ServiceAccountCredentials.from_json_keyfile_name(JSON_FILE_PATH, scope)
     gs = gspread.authorize(credentials)
     spreadsheet_key = SHEET_KEY
     wb = gs.open_by_key(spreadsheet_key)
