@@ -8,6 +8,10 @@ import functions.edit_gspread as egs
 ws_titles, ws_db = egs.get_worksheet()
 st.set_page_config(layout="wide")
 
+if "visibility" not in st.session_state:
+    st.session_state.visibility = "visible"
+    st.session_state.disabled = False
+
 html_template = """
 <!doctype html>
 <html lang="ja">
@@ -45,7 +49,7 @@ genres_li = df["genres"].values.tolist()
 genres_set = set(genre for genres in genres_li for genre in genres)
 genre_list = list(genres_set)
 genre_list.remove("")
-genre_list.append("All")
+genre_list.append("All").sort()
 select_genre = st.multiselect('探すジャンルを選択', genre_list, default='All')
 if "All" in select_genre:
     select_genre = list(genres_set)
@@ -61,19 +65,26 @@ include_nodata = st.checkbox("データが無い作品も含める")
 if not include_nodata:
     df = df[df["release_date"] != "pass"]
     df = df[df["metacritic"] != "No data"]
+    
+keyword_search = st.text_input(
+    "キーワードで探す",
+    label_visibility=st.session_state.visibility,
+    disabled=st.session_state.disabled,
+    placeholder="タイトルとか、点数とか、日付とか･･･！",
+    )
 
 if 'page_num' not in st.session_state:
     st.session_state["page_num"] = 0
 last_page = len(df)//30
 prev, _ ,next = st.columns([1, 8, 1])
 
-if next.button("Next"):
+if next.button("次"):
     if st.session_state["page_num"] + 1 >= last_page:
         st.session_state["page_num"] = 0
     else:
         st.session_state["page_num"] += 1
 
-if prev.button("Previous"):
+if prev.button("前"):
     if st.session_state["page_num"] - 1 < 0:
         st.session_state["page_num"] = last_page-1
     else:
