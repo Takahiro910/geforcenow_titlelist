@@ -17,7 +17,7 @@ recorded_titles = egs.get_titles(ws_titles)
 new_titles = games - recorded_titles
 print(new_titles)
 egs.add_titles(ws_titles, new_titles, titles_last_row)
-    
+
 get_game_info = GetGameInfo()
 
 for title in new_titles:
