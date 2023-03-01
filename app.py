@@ -37,7 +37,9 @@ html_template = """
 st.title("GeForce NOW 対応タイトル一覧")
 
 # --- DataFrameの準備 ---
-df = pd.DataFrame(ws_db.get_all_values())
+if "db" not in st.session_state:
+    st.session_state.db = ws_db.get_all_values()
+df = pd.DataFrame(st.session_state.db)
 df.columns = list(df.loc[0, :])
 df.drop(0, inplace=True)
 df.reset_index(inplace=True)
